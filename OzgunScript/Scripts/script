@@ -1,0 +1,6 @@
+#!/bin/zsh
+export PATH=$PATH:/usr/local/bin
+echo $PATH
+
+tty
+echo "Hello word" | tee /dev/ttys000 | wc -c

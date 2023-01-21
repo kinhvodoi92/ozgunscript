@@ -1,0 +1,19 @@
+#!/bin/zsh
+export PATH=$PATH:/usr/local/bin
+echo $PATH
+
+echo
+echo $ cd $1
+cd $1
+
+echo
+echo $ ls
+ls
+
+echo
+echo $ ts-node script
+ts-node script
+
+#echo
+#echo $ ping google.com.vn
+#ping google.com.vn

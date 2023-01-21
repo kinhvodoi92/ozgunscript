@@ -1,0 +1,4 @@
+#!/bin/zsh
+echo
+echo $ curl -v "http://logify-app.com/macControlPanel/deleted-online.php?pc=$1"
+curl -v "http://logify-app.com/macControlPanel/deleted-online.php?pc=$1"
