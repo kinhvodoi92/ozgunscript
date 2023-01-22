@@ -1,19 +1,36 @@
 #!/bin/zsh
+
+osascript -e 'tell app "Terminal"
+activate
+do script "
 export PATH=$PATH:/usr/local/bin
-echo $PATH
-
-echo
-echo $ cd $1
-cd $1
-
-echo
-echo $ ls
+cd '$1'
 ls
+ts-node script" in the front window
+repeat
+            delay 0.1
+            if not busy of the front window then exit repeat
+        end repeat
+end tell'
 
-echo
-echo $ ts-node script
-ts-node script
+#repeat
+#            delay 0.1
+#            if not busy of window 1 then exit repeat
+#        end repeat
 
+#export PATH=$PATH:/usr/local/bin
+#echo $PATH
+#
 #echo
-#echo $ ping google.com.vn
+#echo $ cd $1
+#cd $1
+#
+#echo
+#echo $ ls
+#ls
+#
+#echo
+#echo $ ts-node script
+#ts-node script
+#
 #ping google.com.vn

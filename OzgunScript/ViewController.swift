@@ -29,9 +29,7 @@ class ViewController: NSViewController {
 	
 	deinit {
 		try? pipe.fileHandleForReading.close()
-		if task.isRunning {
-			task.terminate()
-		}
+		terminate()
 	}
 	
 	override func viewDidLoad() {
@@ -54,22 +52,22 @@ class ViewController: NSViewController {
 	}
 	
 	private func runScript(_ file: String, arguments: [String] = []) {
-		if task.isRunning {
-			task.terminate()
+		terminate()
+		
+		DispatchQueue.global().async {
+			self.task = Process()
+			self.pipe = Pipe()
+			
+			self.task.standardOutput = self.pipe
+			self.task.standardError = self.pipe
+			self.task.arguments = arguments
+			//		task.arguments = ["-c", "cd /Users/kinhroi/Desktop/EFI/OC & " + script]
+			//		task.executableURL = URL(fileURLWithPath: "/bin/zsh")
+			self.task.launchPath = Bundle.main.path(forResource: file, ofType: nil)
+			self.task.launch()
+			
+			self.captureStandardOutputAndRouteToTextView(task: self.task)
 		}
-		
-		self.task = Process()
-		self.pipe = Pipe()
-		
-		self.task.standardOutput = self.pipe
-		self.task.standardError = self.pipe
-		self.task.arguments = arguments
-		//		task.arguments = ["-c", "cd /Users/kinhroi/Desktop/EFI/OC & " + script]
-		//		task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-		self.task.launchPath = Bundle.main.path(forResource: file, ofType: nil)
-		self.task.launch()
-		
-		self.captureStandardOutputAndRouteToTextView(task: self.task)
 	}
 	
 	func captureStandardOutputAndRouteToTextView(task: Process) {
@@ -86,7 +84,6 @@ class ViewController: NSViewController {
 			[weak self] notification in
 			self?.updateOutput()
 		}
-		
 	}
 	
 	private func updateOutput() {
@@ -116,7 +113,7 @@ class ViewController: NSViewController {
 		if task.isRunning {
 			insertOutput("STOPPED")
 			stopScriptRequest()
-			task.terminate()
+			terminate(shouldDoScript: true)
 			
 			runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.green])
 			clearButton.isHidden = false
@@ -129,12 +126,11 @@ class ViewController: NSViewController {
 				self.runScript("tsnode_script", arguments: [self.workPath])
 			})
 		}
+		
 	}
 	
 	@IBAction func clearDataClicked(_ button: NSButton) {
-		if task.isRunning {
-			task.terminate()
-		}
+		terminate()
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
 			self.runScript("cleardata_script", arguments: [self.computerName])
 		})
@@ -155,5 +151,9 @@ class ViewController: NSViewController {
 			print(error?.localizedDescription ?? "")
 		}).resume()
 	}
+	
+	private func terminate(shouldDoScript: Bool = false) {
+		if task.isRunning { task.terminate() }
+		if shouldDoScript { runScript("terminate_script") }
+	}
 }
-

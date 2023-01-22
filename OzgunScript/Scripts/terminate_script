@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+osascript -e '
+tell application "Terminal"
+	tell front window to activate
+	tell application "System Events" to keystroke "c" using control down
+end tell'

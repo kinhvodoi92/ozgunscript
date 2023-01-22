@@ -1,4 +1,8 @@
 #!/bin/zsh
-echo
-echo $ curl -v "http://logify-app.com/macControlPanel/deleted-online.php?pc=$1"
-curl -v "http://logify-app.com/macControlPanel/deleted-online.php?pc=$1"
+
+script="curl -v 'http://logify-app.com/macControlPanel/deleted-online.php?pc=$1'"
+
+osascript -e 'tell app "Terminal"
+activate
+do script "'$script'" in the front window
+end tell'

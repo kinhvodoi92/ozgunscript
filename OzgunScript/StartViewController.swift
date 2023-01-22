@@ -13,13 +13,23 @@ class StartViewController: NSViewController {
 	@IBOutlet var pathView: NSButton!
 	@IBOutlet var saveView: NSButton!
 	
-	private var pcName: String? = Host.current().localizedName
-	private var path: String?
+	private lazy var pcName: String? = UserDefaults.standard.string(forKey: nameKey) ?? Host.current().localizedName
+	private lazy var path: String? = UserDefaults.standard.string(forKey: pathKey)
+	
+	private let nameKey = "PCNameKey"
+	private let pathKey = "WorkPathKey"
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		saveView.attributedTitle = NSAttributedString(string: "Save", attributes: [.foregroundColor: NSColor.green])
+		
+		if let pcName = pcName {
+			nameView.stringValue = pcName
+		}
+		if let path = path {
+			pathView.title = path
+		}
     }
     
 	@IBAction func choosePath(_ button: NSButton) {
@@ -50,6 +60,9 @@ class StartViewController: NSViewController {
 		}
 
 		pcName = name
+		
+		UserDefaults.standard.set(name, forKey: nameKey)
+		UserDefaults.standard.set(path, forKey: pathKey)
 		
 		if let vc = NSStoryboard(name: "Main", bundle: .main).instantiateController(withIdentifier: "ViewController") as? ViewController {
 			vc.computerName = pcName ?? ""

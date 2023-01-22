@@ -1,6 +1,5 @@
 #!/bin/zsh
-export PATH=$PATH:/usr/local/bin
-echo $PATH
-
-tty
-echo "Hello word" | tee /dev/ttys000 | wc -c
+osascript -e 'tell app "Terminal"
+activate
+do script "ping google.com.vn" in the front window
+end tell'
