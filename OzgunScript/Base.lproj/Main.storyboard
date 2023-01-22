@@ -706,15 +706,15 @@
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController storyboardIdentifier="ViewController" id="XfG-lQ-9wD" customClass="ViewController" customModule="OzgunScript" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="416"/>
+                    <view key="view" misplaced="YES" id="m2S-Jp-Qdl">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="188"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="equalSpacing" orientation="vertical" alignment="centerX" spacing="24" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IaE-bV-8t5">
-                                <rect key="frame" x="24" y="24" width="432" height="368"/>
+                                <rect key="frame" x="24" y="24" width="432" height="144"/>
                                 <subviews>
                                     <stackView distribution="fillEqually" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c9V-Fu-Kss">
-                                        <rect key="frame" x="0.0" y="352" width="432" height="16"/>
+                                        <rect key="frame" x="0.0" y="128" width="432" height="16"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yoS-Kq-hSt">
                                                 <rect key="frame" x="-2" y="0.0" width="216" height="16"/>
@@ -743,7 +743,7 @@
                                         </customSpacing>
                                     </stackView>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iwt-yH-kLg">
-                                        <rect key="frame" x="172" y="284" width="89" height="47"/>
+                                        <rect key="frame" x="172" y="60" width="89" height="47"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="dNm-oR-XSw"/>
                                         </constraints>
@@ -756,7 +756,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5EN-tH-hm5">
-                                        <rect key="frame" x="118" y="220" width="196" height="47"/>
+                                        <rect key="frame" x="118" y="-4" width="196" height="47"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="Yzm-xQ-FBs"/>
                                         </constraints>
@@ -768,33 +768,6 @@
                                             <action selector="clearDataClicked:" target="XfG-lQ-9wD" id="hS7-cN-T5y"/>
                                         </connections>
                                     </button>
-                                    <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" verticalScrollElasticity="allowed" translatesAutoresizingMaskIntoConstraints="NO" id="nIg-YJ-Hsa">
-                                        <rect key="frame" x="0.0" y="0.0" width="432" height="200"/>
-                                        <clipView key="contentView" drawsBackground="NO" id="2Og-iR-wXw">
-                                            <rect key="frame" x="0.0" y="0.0" width="417" height="200"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <subviews>
-                                                <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="91A-vu-Fui">
-                                                    <rect key="frame" x="0.0" y="0.0" width="417" height="200"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <color key="textColor" red="0.3843137324" green="0.72941178080000002" blue="0.27450981740000002" alpha="1" colorSpace="deviceRGB"/>
-                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <size key="minSize" width="417" height="200"/>
-                                                    <size key="maxSize" width="432" height="10000000"/>
-                                                    <color key="insertionPointColor" red="0.3843137324" green="0.72941178080000002" blue="0.27450981740000002" alpha="1" colorSpace="deviceRGB"/>
-                                                </textView>
-                                            </subviews>
-                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        </clipView>
-                                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Iqd-lv-oD8">
-                                            <rect key="frame" x="-100" y="-100" width="225" height="15"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </scroller>
-                                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="IJv-Ny-jTo">
-                                            <rect key="frame" x="417" y="0.0" width="15" height="200"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </scroller>
-                                    </scrollView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="c9V-Fu-Kss" firstAttribute="leading" secondItem="IaE-bV-8t5" secondAttribute="leading" id="8fP-U6-PjG"/>
@@ -804,10 +777,8 @@
                                     <integer value="1000"/>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
-                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
-                                    <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
@@ -816,7 +787,7 @@
                         </subviews>
                         <constraints>
                             <constraint firstItem="IaE-bV-8t5" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="24" id="0xG-cY-ONU"/>
-                            <constraint firstAttribute="bottom" secondItem="IaE-bV-8t5" secondAttribute="bottom" constant="24" id="EsX-2M-VPn"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="IaE-bV-8t5" secondAttribute="bottom" constant="24" id="EsX-2M-VPn"/>
                             <constraint firstItem="IaE-bV-8t5" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="24" id="q4Q-gU-La4"/>
                             <constraint firstAttribute="trailing" secondItem="IaE-bV-8t5" secondAttribute="trailing" constant="24" id="zCf-yN-7Wi"/>
                         </constraints>
@@ -826,13 +797,12 @@
                         <outlet property="countView" destination="mmy-e6-KWd" id="UyK-2e-fw8"/>
                         <outlet property="headerView" destination="c9V-Fu-Kss" id="Uj7-Lc-cFb"/>
                         <outlet property="nameView" destination="yoS-Kq-hSt" id="b6R-9m-3Fs"/>
-                        <outlet property="outputView" destination="nIg-YJ-Hsa" id="BLJ-YG-Y29"/>
                         <outlet property="runButton" destination="iwt-yH-kLg" id="764-L9-9Wd"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="1136"/>
+            <point key="canvasLocation" x="75" y="1250"/>
         </scene>
         <!--Start View Controller-->
         <scene sceneID="ZX2-LJ-72i">
