@@ -28,7 +28,7 @@ class StartViewController: NSViewController {
 			nameView.stringValue = pcName
 		}
 		if let path = path {
-			pathView.title = path
+			pathView.title = "Path: \(path)"
 		}
     }
     
@@ -45,7 +45,7 @@ class StartViewController: NSViewController {
 		if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
 			if let path = dialog.url?.path {
 				self.path = path
-				self.pathView.title = path
+				self.pathView.title = "Path: \(path)"
 			}
 		}
 	}

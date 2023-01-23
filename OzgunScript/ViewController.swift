@@ -13,7 +13,7 @@ class ViewController: NSViewController {
 	@IBOutlet var countView: NSTextField!
 	@IBOutlet var runButton: NSButton!
 	@IBOutlet var clearButton: NSButton!
-	@IBOutlet var outputView: NSScrollView!
+//	@IBOutlet var outputView: NSScrollView!
 	
 	private var task = Process()
 	private var pipe = Pipe()
@@ -21,15 +21,15 @@ class ViewController: NSViewController {
 	var computerName: String = ""
 	var workPath: String = ""
 	
-	var textView: NSTextView {
-		return outputView.contentView.documentView as! NSTextView
-	}
+//	var textView: NSTextView {
+//		return outputView.contentView.documentView as! NSTextView
+//	}
 	
 	var output: String = ""
 	
 	deinit {
 		try? pipe.fileHandleForReading.close()
-		terminate()
+		terminate(shouldDoScript: true)
 	}
 	
 	override func viewDidLoad() {
@@ -66,52 +66,52 @@ class ViewController: NSViewController {
 			self.task.launchPath = Bundle.main.path(forResource: file, ofType: nil)
 			self.task.launch()
 			
-			self.captureStandardOutputAndRouteToTextView(task: self.task)
+//			self.captureStandardOutputAndRouteToTextView(task: self.task)
 		}
 	}
 	
-	func captureStandardOutputAndRouteToTextView(task: Process) {
-		pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
-		
-		task.terminationHandler = { [weak self] _ in
-			DispatchQueue.main.async {
-				self?.runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.green])
-				self?.clearButton.isHidden = false
-			}
-		}
-		
-		NotificationCenter.default.addObserver(forName: NSNotification.Name.NSFileHandleDataAvailable, object: pipe.fileHandleForReading , queue: nil) {
-			[weak self] notification in
-			self?.updateOutput()
-		}
-	}
-	
-	private func updateOutput() {
-		let output = self.pipe.fileHandleForReading.availableData
-		let outputString = String(data: output, encoding: String.Encoding.utf8) ?? ""
-		
-		self.insertOutput(outputString)
-		
-		self.pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
-	}
-	
-	private func insertOutput(_ string: String) {
-		if string.isEmpty { return }
-		
-		DispatchQueue.main.async(execute: {
-			let previousOutput = self.textView.string
-			let nextOutput = previousOutput + "\n" + string
-			self.textView.string = nextOutput
-			
-			let range = NSRange(location:nextOutput.count,length:0)
-			self.textView.scrollRangeToVisible(range)
-		})
-	}
+//	func captureStandardOutputAndRouteToTextView(task: Process) {
+//		pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
+//
+//		task.terminationHandler = { [weak self] _ in
+//			DispatchQueue.main.async {
+//				self?.runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.green])
+//				self?.clearButton.isHidden = false
+//			}
+//		}
+//
+//		NotificationCenter.default.addObserver(forName: NSNotification.Name.NSFileHandleDataAvailable, object: pipe.fileHandleForReading , queue: nil) {
+//			[weak self] notification in
+//			self?.updateOutput()
+//		}
+//	}
+//
+//	private func updateOutput() {
+//		let output = self.pipe.fileHandleForReading.availableData
+//		let outputString = String(data: output, encoding: String.Encoding.utf8) ?? ""
+//
+//		self.insertOutput(outputString)
+//
+//		self.pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
+//	}
+//
+//	private func insertOutput(_ string: String) {
+//		if string.isEmpty { return }
+//
+//		DispatchQueue.main.async(execute: {
+//			let previousOutput = self.textView.string
+//			let nextOutput = previousOutput + "\n" + string
+//			self.textView.string = nextOutput
+//
+//			let range = NSRange(location:nextOutput.count,length:0)
+//			self.textView.scrollRangeToVisible(range)
+//		})
+//	}
 	
 	
 	@IBAction func runScriptClicked(_ button: NSButton) {
 		if task.isRunning {
-			insertOutput("STOPPED")
+//			insertOutput("STOPPED")
 			stopScriptRequest()
 			terminate(shouldDoScript: true)
 			
@@ -130,17 +130,27 @@ class ViewController: NSViewController {
 	}
 	
 	@IBAction func clearDataClicked(_ button: NSButton) {
-		terminate()
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-			self.runScript("cleardata_script", arguments: [self.computerName])
-		})
+		guard let url = URL(string: "http://logify-app.com/macControlPanel/deleted-online.php?pc=\(computerName)") else { return }
+		let request = URLRequest(url: url)
+		URLSession.shared.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+//			if error == nil {
+				DispatchQueue.main.async {
+					self?.showAlert("Delete online data successful!")
+				}
+//			}
+		}).resume()
+		
+//		terminate()
+//		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+//			self.runScript("cleardata_script", arguments: [self.computerName])
+//		})
 	}
 	
 	private func startScriptRequest() {
 		guard let url = URL(string: "http://logify-app.com/macControlPanel/started.php?pc=\(computerName)") else { return }
 		let request = URLRequest(url: url)
 		URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
-			print(error?.localizedDescription ?? "")
+			print(error)
 		}).resume()
 	}
 	
@@ -148,12 +158,24 @@ class ViewController: NSViewController {
 		guard let url = URL(string: "http://logify-app.com/macControlPanel/stopped.php?pc=\(computerName)") else { return }
 		let request = URLRequest(url: url)
 		URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
-			print(error?.localizedDescription ?? "")
+			print(error)
 		}).resume()
 	}
 	
 	private func terminate(shouldDoScript: Bool = false) {
 		if task.isRunning { task.terminate() }
 		if shouldDoScript { runScript("terminate_script") }
+	}
+	
+	private func showAlert(_ message: String) {
+		let alert = NSAlert()
+		
+					alert.messageText = message
+		
+					alert.addButton(withTitle: "OK")
+		
+					alert.alertStyle = .informational
+		
+					alert.runModal()
 	}
 }
