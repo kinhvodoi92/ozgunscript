@@ -1,7 +1,18 @@
 #!/bin/zsh
 
 osascript -e '
-tell application "Terminal"
-	tell front window to activate
-	tell application "System Events" to keystroke "c" using control down
+tell application "System Events"
+	tell application "Terminal"
+		activate front window
+		do script "killall -9 Terminal"
+	end tell
 end tell'
+#if application "Terminal" is running then do shell script "killall -9 \"Terminal\""'
+#tell application "Terminal"
+#	activate
+#	tell application "System Events"
+#		keystroke "q" using command down
+#		delay 1
+#		click button "Cancel"
+#	end tell
+#end tell'

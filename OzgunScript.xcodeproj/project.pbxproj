@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B307AD6D298250550018B801 /* AuthItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B307AD6C298250550018B801 /* AuthItem.swift */; };
+		B307AD712982F6CE0018B801 /* copy_script in Resources */ = {isa = PBXBuildFile; fileRef = B307AD702982F6CE0018B801 /* copy_script */; };
 		B30A4C0F297AA72300E84795 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30A4C0E297AA72300E84795 /* AppDelegate.swift */; };
 		B30A4C11297AA72300E84795 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30A4C10297AA72300E84795 /* ViewController.swift */; };
 		B30A4C13297AA72400E84795 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B30A4C12297AA72400E84795 /* Assets.xcassets */; };
@@ -15,10 +17,17 @@
 		B331EE29297AEC49007C2B9D /* tsnode_script in Resources */ = {isa = PBXBuildFile; fileRef = B331EE28297AEC49007C2B9D /* tsnode_script */; };
 		B331EE2B297AF6F5007C2B9D /* cleardata_script in Resources */ = {isa = PBXBuildFile; fileRef = B331EE2A297AF6F4007C2B9D /* cleardata_script */; };
 		B376D28D297CC6490093CC9F /* terminate_script in Resources */ = {isa = PBXBuildFile; fileRef = B376D28C297CC6490093CC9F /* terminate_script */; };
+		B38C9AAA29821C25000D7E71 /* AddAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38C9AA829821C25000D7E71 /* AddAuthViewController.swift */; };
+		B38C9AAB29821C25000D7E71 /* AddAuthViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B38C9AA929821C25000D7E71 /* AddAuthViewController.xib */; };
+		B38C9AAE29822307000D7E71 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38C9AAD29822307000D7E71 /* Utils.swift */; };
+		B38C9AB02982251E000D7E71 /* ValueNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38C9AAF2982251E000D7E71 /* ValueNotifier.swift */; };
+		B38C9AB5298234D4000D7E71 /* AuthViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38C9AB4298234D4000D7E71 /* AuthViewRow.swift */; };
 		B3FE79FA297B75D0004C3646 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FE79F9297B75D0004C3646 /* StartViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B307AD6C298250550018B801 /* AuthItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthItem.swift; sourceTree = "<group>"; };
+		B307AD702982F6CE0018B801 /* copy_script */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = copy_script; sourceTree = "<group>"; };
 		B30A4C0B297AA72300E84795 /* OzgunScript.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OzgunScript.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B30A4C0E297AA72300E84795 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B30A4C10297AA72300E84795 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -29,6 +38,11 @@
 		B331EE28297AEC49007C2B9D /* tsnode_script */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = tsnode_script; sourceTree = "<group>"; };
 		B331EE2A297AF6F4007C2B9D /* cleardata_script */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = cleardata_script; sourceTree = "<group>"; };
 		B376D28C297CC6490093CC9F /* terminate_script */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = terminate_script; sourceTree = "<group>"; };
+		B38C9AA829821C25000D7E71 /* AddAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAuthViewController.swift; sourceTree = "<group>"; };
+		B38C9AA929821C25000D7E71 /* AddAuthViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddAuthViewController.xib; sourceTree = "<group>"; };
+		B38C9AAD29822307000D7E71 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		B38C9AAF2982251E000D7E71 /* ValueNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueNotifier.swift; sourceTree = "<group>"; };
+		B38C9AB4298234D4000D7E71 /* AuthViewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewRow.swift; sourceTree = "<group>"; };
 		B3FE79F9297B75D0004C3646 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		B3FE79FB297B829A004C3646 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -44,6 +58,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B307AD6F298250600018B801 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B307AD6C298250550018B801 /* AuthItem.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		B30A4C02297AA72300E84795 = {
 			isa = PBXGroup;
 			children = (
@@ -63,10 +85,14 @@
 		B30A4C0D297AA72300E84795 /* OzgunScript */ = {
 			isa = PBXGroup;
 			children = (
+				B38C9AAC298222F7000D7E71 /* Utils */,
 				B3FE79FB297B829A004C3646 /* Info.plist */,
 				B30A4C1D297AA94500E84795 /* Scripts */,
 				B30A4C0E297AA72300E84795 /* AppDelegate.swift */,
 				B30A4C10297AA72300E84795 /* ViewController.swift */,
+				B38C9AB629823652000D7E71 /* AuthList */,
+				B38C9AA829821C25000D7E71 /* AddAuthViewController.swift */,
+				B38C9AA929821C25000D7E71 /* AddAuthViewController.xib */,
 				B3FE79F9297B75D0004C3646 /* StartViewController.swift */,
 				B30A4C12297AA72400E84795 /* Assets.xcassets */,
 				B30A4C14297AA72400E84795 /* Main.storyboard */,
@@ -79,11 +105,38 @@
 			isa = PBXGroup;
 			children = (
 				B30A4C1E297AA96B00E84795 /* script */,
+				B307AD702982F6CE0018B801 /* copy_script */,
 				B331EE28297AEC49007C2B9D /* tsnode_script */,
 				B331EE2A297AF6F4007C2B9D /* cleardata_script */,
 				B376D28C297CC6490093CC9F /* terminate_script */,
 			);
 			path = Scripts;
+			sourceTree = "<group>";
+		};
+		B38C9AAC298222F7000D7E71 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				B38C9AAD29822307000D7E71 /* Utils.swift */,
+				B38C9AAF2982251E000D7E71 /* ValueNotifier.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		B38C9AB12982340A000D7E71 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B38C9AB4298234D4000D7E71 /* AuthViewRow.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B38C9AB629823652000D7E71 /* AuthList */ = {
+			isa = PBXGroup;
+			children = (
+				B38C9AB12982340A000D7E71 /* Views */,
+				B307AD6F298250600018B801 /* Models */,
+			);
+			path = AuthList;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -146,9 +199,11 @@
 			files = (
 				B30A4C1F297AA96B00E84795 /* script in Resources */,
 				B30A4C13297AA72400E84795 /* Assets.xcassets in Resources */,
+				B307AD712982F6CE0018B801 /* copy_script in Resources */,
 				B331EE2B297AF6F5007C2B9D /* cleardata_script in Resources */,
 				B331EE29297AEC49007C2B9D /* tsnode_script in Resources */,
 				B30A4C16297AA72400E84795 /* Main.storyboard in Resources */,
+				B38C9AAB29821C25000D7E71 /* AddAuthViewController.xib in Resources */,
 				B376D28D297CC6490093CC9F /* terminate_script in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -160,9 +215,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B38C9AAE29822307000D7E71 /* Utils.swift in Sources */,
+				B38C9AAA29821C25000D7E71 /* AddAuthViewController.swift in Sources */,
+				B307AD6D298250550018B801 /* AuthItem.swift in Sources */,
 				B30A4C11297AA72300E84795 /* ViewController.swift in Sources */,
 				B30A4C0F297AA72300E84795 /* AppDelegate.swift in Sources */,
 				B3FE79FA297B75D0004C3646 /* StartViewController.swift in Sources */,
+				B38C9AB02982251E000D7E71 /* ValueNotifier.swift in Sources */,
+				B38C9AB5298234D4000D7E71 /* AuthViewRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

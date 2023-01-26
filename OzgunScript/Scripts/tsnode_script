@@ -2,15 +2,12 @@
 
 osascript -e 'tell app "Terminal"
 activate
-do script "
-export PATH=$PATH:/usr/local/bin
-cd '$1'
-ls
-ts-node script" in the front window
+do script "cd '$1'
+ping google.com.vn"
 repeat
-            delay 0.1
-            if not busy of the front window then exit repeat
-        end repeat
+	delay 0.1
+	if not busy of window 1 then exit repeat
+end repeat
 end tell'
 
 #repeat
