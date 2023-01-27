@@ -3,10 +3,12 @@
 osascript -e 'tell app "Terminal"
 activate
 do script "cd '$1'
-ts-node script"
+ts-node example
+ping google.com.vn"
+set W to the front window
 repeat
 	delay 0.1
-	if not busy of window 1 then exit repeat
+	if not busy of W then exit repeat
 end repeat
 end tell'
 

@@ -10,7 +10,9 @@ import Cocoa
 class ViewController: NSViewController {
 	@IBOutlet var headerView: NSStackView!
 	@IBOutlet var nameView: NSTextField!
+	@IBOutlet var runningCountView: NSTextField!
 	@IBOutlet var countView: NSTextField!
+	@IBOutlet var timeDelayView: NSTextField!
 	@IBOutlet var runButton: NSButton!
 	@IBOutlet var clearButton: NSButton!
 	@IBOutlet var authListView: NSStackView!
@@ -25,8 +27,12 @@ class ViewController: NSViewController {
 	private var parentPath: String = ""
 	private var folderName: String = ""
 	
-	var auths = ValueNotifier(value: [String]())
-	var tasks = [String: Process]()
+	private var auths = ValueNotifier(value: [String]())
+	private var tasks = [String: Process]()
+	private var timer: Timer?
+	private lazy var timeDelay = UserDefaults.standard.integer(forKey: delayTimeKey)
+	
+	private let delayTimeKey = "DelayTimeKey"
 	
 	//	var textView: NSTextView {
 	//		return outputView.contentView.documentView as! NSTextView
@@ -36,7 +42,7 @@ class ViewController: NSViewController {
 		return computerName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? computerName
 	}
 	var isRunningScript: Bool {
-		return tasks.values.contains(where: { $0.isRunning })
+		return tasks.values.contains(where: { $0.isRunning }) || timer?.isValid == true
 	}
 	
 	var output: String = ""
@@ -53,9 +59,10 @@ class ViewController: NSViewController {
 		title = "OzgunScript"
 		
 		nameView.stringValue = computerName
-		runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.green])
+		runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.systemGreen])
 		clearButton.attributedTitle = NSAttributedString(string: "Delete Current Online Datas", attributes: [.foregroundColor: NSColor.red])
 		
+		removeDSstoreFiles()
 		setup()
 		setAuthCount()
 		listenAuths()
@@ -84,20 +91,27 @@ class ViewController: NSViewController {
 		auths.forEach { [weak self] name in
 			self?.addAuthToView(AuthItem(name: name, status: .stopped))
 		}
+		self.runningCountView.stringValue = "Running: 0 / \(auths.count)"
+		
+		if timeDelay == 0 {
+			timeDelay = 5
+			UserDefaults.standard.set(timeDelay, forKey: delayTimeKey)
+		}
+		timeDelayView.stringValue = "\(timeDelay)"
 	}
 	
 	private func runScript(authName: String) {
 		DispatchQueue(label: authName).async {
 			let task = Process()
-			self.pipe = Pipe()
+//			self.pipe = Pipe()
 			
-			self.task.standardOutput = self.pipe
-			self.task.standardError = self.pipe
+//			self.task.standardOutput = self.pipe
+//			self.task.standardError = self.pipe
 			//			task.arguments =  ["-c", script]
 			//			task.executableURL = URL(fileURLWithPath: "/bin/zsh")
 			task.arguments = ["\(self.workPath)_\(authName)"]
 			task.launchPath = Bundle.main.path(forResource: "tsnode_script", ofType: nil)
-			try? task.run()
+			task.launch()
 			
 			DispatchQueue.main.async {
 				self.tasks.updateValue(task, forKey: authName)
@@ -127,7 +141,7 @@ class ViewController: NSViewController {
 	//
 	//		task.terminationHandler = { [weak self] _ in
 	//			DispatchQueue.main.async {
-	//				self?.runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.green])
+	//				self?.runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.systemGreen])
 	//				self?.clearButton.isHidden = false
 	//			}
 	//		}
@@ -163,7 +177,7 @@ class ViewController: NSViewController {
 	private func updateRunningStatus() {
 		DispatchQueue.main.async {
 			let isRunning = self.isRunningScript
-			self.runButton.attributedTitle = NSAttributedString(string: isRunning ? "Stop" : "Run Script", attributes: [.foregroundColor: isRunning ? NSColor.red : NSColor.green])
+			self.runButton.attributedTitle = NSAttributedString(string: isRunning ? "Stop" : "Run Script", attributes: [.foregroundColor: isRunning ? NSColor.red : NSColor.systemGreen])
 			self.clearButton.isHidden = isRunning
 			
 			self.authListView.arrangedSubviews.forEach { view in
@@ -172,6 +186,8 @@ class ViewController: NSViewController {
 					view.auth = auth
 				}
 			}
+			
+			self.runningCountView.stringValue = "Running: \(self.tasks.filter({ $0.value.isRunning }).count) / \(self.auths.value?.count ?? 0)"
 		}
 	}
 	
@@ -182,16 +198,31 @@ class ViewController: NSViewController {
 			stopScriptRequest()
 			terminate()
 			
-			runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.green])
+			runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.systemGreen])
 			clearButton.isHidden = false
 		} else {
+			startScriptRequest()
+			
+			timeDelay = Int(timeDelayView.stringValue) ?? 5
+			UserDefaults.standard.set(timeDelay, forKey: delayTimeKey)
+			
 			runButton.attributedTitle = NSAttributedString(string: "Stop", attributes: [.foregroundColor: NSColor.red])
 			clearButton.isHidden = true
 			
-			startScriptRequest()
-			self.auths.value?.forEach({ name in
-				self.runScript(authName: name)
-			})
+			if let auths = self.auths.value {
+				var index = 0
+				timer?.invalidate()
+				timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.timeDelay), repeats: true, block: { [weak self] _ in
+					if index >= auths.count {
+						self?.timer?.invalidate()
+						self?.timer = nil
+						return
+					}
+					self?.runScript(authName: auths[index])
+					index += 1
+				})
+				timer?.fire()
+			}
 		}
 		
 	}
@@ -261,6 +292,8 @@ class ViewController: NSViewController {
 		}
 		self.runTerminateScript()
 		
+		self.timer?.invalidate()
+		self.timer = nil
 		self.tasks.removeAll()
 		
 		self.authListView.arrangedSubviews.forEach { view in
@@ -361,6 +394,16 @@ extension ViewController {
 			
 		} catch (let err) {
 			Utils.showError("Can't remove this clone folder\n\(err.localizedDescription)")
+		}
+	}
+	
+	private func removeDSstoreFiles() {
+		try? FileManager.default.removeItem(atPath: "\(workPath)/auth/.DS_Store")
+		
+		let folders = self.auths.value ?? []
+		folders.forEach { name in
+			let dspath = "\(workPath)_\(name)/auth/.DS_Store"
+			try? FileManager.default.removeItem(atPath: dspath)
 		}
 	}
 }

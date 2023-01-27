@@ -717,15 +717,23 @@
                                         <rect key="frame" x="0.0" y="456" width="419" height="40"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="u6Y-ew-ROH">
-                                                <rect key="frame" x="-2" y="12" width="138" height="16"/>
+                                                <rect key="frame" x="-2" y="12" width="103" height="16"/>
                                                 <textFieldCell key="cell" controlSize="large" lineBreakMode="clipping" title="Unknown" id="4iR-XU-oN1">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PYZ-lA-taz">
+                                                <rect key="frame" x="105" y="12" width="103" height="16"/>
+                                                <textFieldCell key="cell" controlSize="large" lineBreakMode="clipping" title="Running:" id="GzC-Cq-DOx">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="systemGreenColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
                                             <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ux3-6X-Drb">
-                                                <rect key="frame" x="140" y="12" width="139" height="16"/>
+                                                <rect key="frame" x="212" y="12" width="102" height="16"/>
                                                 <textFieldCell key="cell" controlSize="large" lineBreakMode="clipping" alignment="right" title="Total Auth: 0" id="qNm-N3-hZl">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -733,7 +741,7 @@
                                                 </textFieldCell>
                                             </textField>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1an-u1-1Ir">
-                                                <rect key="frame" x="279" y="0.0" width="146" height="40"/>
+                                                <rect key="frame" x="314" y="0.0" width="111" height="40"/>
                                                 <buttonCell key="cell" type="push" title="+ Add Auth" bezelStyle="rounded" alignment="center" controlSize="large" borderStyle="border" inset="2" id="90k-dD-fGR">
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                     <font key="font" metaFont="system"/>
@@ -750,31 +758,82 @@
                                             <integer value="1000"/>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
+                                            <integer value="1000"/>
                                         </visibilityPriorities>
                                         <customSpacing>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
                                         </customSpacing>
                                     </stackView>
-                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iwt-yH-kLg">
-                                        <rect key="frame" x="165" y="388" width="89" height="47"/>
+                                    <stackView distribution="fillProportionally" orientation="horizontal" alignment="bottom" spacing="24" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nFW-oF-6Ne">
+                                        <rect key="frame" x="106" y="382" width="207" height="50"/>
+                                        <subviews>
+                                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NXF-sn-VAF">
+                                                <rect key="frame" x="0.0" y="0.0" width="100" height="45"/>
+                                                <subviews>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="twz-eF-Cd2">
+                                                        <rect key="frame" x="-2" y="29" width="72" height="16"/>
+                                                        <textFieldCell key="cell" controlSize="large" lineBreakMode="clipping" title="Delay Time" id="cUC-jn-SbC">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="T8o-rZ-uti">
+                                                        <rect key="frame" x="0.0" y="0.0" width="100" height="21"/>
+                                                        <textFieldCell key="cell" controlSize="large" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Delay Time" drawsBackground="YES" id="T3z-Ai-0hO">
+                                                            <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="nKb-kH-xCT"/>
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="100" id="33N-Bd-TzB"/>
+                                                </constraints>
+                                                <visibilityPriorities>
+                                                    <integer value="1000"/>
+                                                    <integer value="1000"/>
+                                                </visibilityPriorities>
+                                                <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                </customSpacing>
+                                            </stackView>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iwt-yH-kLg">
+                                                <rect key="frame" x="121" y="-4" width="89" height="47"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="dNm-oR-XSw"/>
+                                                </constraints>
+                                                <buttonCell key="cell" type="bevel" title="Run Script" bezelStyle="regularSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="BEd-4R-oKp">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="runScriptClicked:" target="XfG-lQ-9wD" id="nMZ-Wc-cwr"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="dNm-oR-XSw"/>
+                                            <constraint firstAttribute="height" constant="50" id="RB1-pQ-PNX"/>
                                         </constraints>
-                                        <buttonCell key="cell" type="bevel" title="Run Script" bezelStyle="regularSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="BEd-4R-oKp">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="runScriptClicked:" target="XfG-lQ-9wD" id="nMZ-Wc-cwr"/>
-                                        </connections>
-                                    </button>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
                                     <stackView distribution="equalCentering" orientation="horizontal" alignment="centerY" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5cF-h2-Ey1">
-                                        <rect key="frame" x="0.0" y="264" width="419" height="104"/>
+                                        <rect key="frame" x="0.0" y="264" width="419" height="94"/>
                                         <subviews>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7Mp-9k-XcI">
-                                                <rect key="frame" x="-3" y="28" width="213" height="47"/>
+                                                <rect key="frame" x="-3" y="23" width="213" height="47"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="iNm-8w-oC6"/>
                                                 </constraints>
@@ -787,7 +846,7 @@
                                                 </connections>
                                             </button>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5EN-tH-hm5">
-                                                <rect key="frame" x="226" y="28" width="196" height="47"/>
+                                                <rect key="frame" x="226" y="23" width="196" height="47"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="Yzm-xQ-FBs"/>
                                                 </constraints>
@@ -886,6 +945,8 @@
                         <outlet property="headerView" destination="3nx-YI-qzx" id="0E4-XS-nhM"/>
                         <outlet property="nameView" destination="u6Y-ew-ROH" id="yhy-mt-gUq"/>
                         <outlet property="runButton" destination="iwt-yH-kLg" id="764-L9-9Wd"/>
+                        <outlet property="runningCountView" destination="PYZ-lA-taz" id="Zhu-0e-hS2"/>
+                        <outlet property="timeDelayView" destination="T8o-rZ-uti" id="xFQ-MD-bIS"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
