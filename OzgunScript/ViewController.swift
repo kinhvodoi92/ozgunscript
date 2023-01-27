@@ -62,10 +62,9 @@ class ViewController: NSViewController {
 		runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.systemGreen])
 		clearButton.attributedTitle = NSAttributedString(string: "Delete Current Online Datas", attributes: [.foregroundColor: NSColor.systemRed])
 		
+		listenAuths()
 		setup()
 		removeDSstoreFiles()
-		setAuthCount()
-		listenAuths()
 	}
 	
 	override var representedObject: Any? {
@@ -85,17 +84,8 @@ class ViewController: NSViewController {
 		
 		folderName = workingPath.lastPathComponent
 		parentPath = workingPath.deletingLastPathComponent().absoluteString
-		guard let list = try? FileManager.default.contentsOfDirectory(atPath: parentPath) else {
-			return
-		}
-		let prefix = "\(folderName)_"
-		let auths = list.filter({ $0.hasPrefix(prefix) }).map({ $0.replacingOccurrences(of: prefix, with: "")})
 		
-		self.auths.value = auths
-		auths.forEach { [weak self] name in
-			self?.addAuthToView(AuthItem(name: name, status: .stopped))
-		}
-		self.runningCountView.stringValue = "Running: 0 / \(auths.count)"
+		updateAuthList()
 		
 		if timeDelay == 0 {
 			timeDelay = 5
@@ -107,10 +97,10 @@ class ViewController: NSViewController {
 	private func runScript(authName: String) {
 		DispatchQueue(label: authName).async {
 			let task = Process()
-//			self.pipe = Pipe()
+			//			self.pipe = Pipe()
 			
-//			self.task.standardOutput = self.pipe
-//			self.task.standardError = self.pipe
+			//			self.task.standardOutput = self.pipe
+			//			self.task.standardError = self.pipe
 			//			task.arguments =  ["-c", script]
 			//			task.executableURL = URL(fileURLWithPath: "/bin/zsh")
 			task.arguments = ["\(self.workPath)_\(authName)"]
@@ -199,6 +189,64 @@ class ViewController: NSViewController {
 		self.runningCountView.stringValue = "Running: \(self.tasks.filter({ $0.value.isRunning }).count) / \(self.auths.value?.count ?? 0)"
 	}
 	
+	private func updateAuthList() {
+		guard let list = try? FileManager.default.contentsOfDirectory(atPath: parentPath) else {
+			return
+		}
+		let prefix = "\(folderName)_"
+		let auths = list.filter({ $0.hasPrefix(prefix) }).map({ $0.replacingOccurrences(of: prefix, with: "")})
+		
+		self.auths.value = auths
+		auths.forEach { [weak self] name in
+			self?.addAuthToView(AuthItem(name: name, status: .stopped))
+		}
+	}
+	
+	private func startScriptRequest() {
+		guard let url = URL(string: "http://logify-app.com/macControlPanel/started.php?pc=\(encodedName)") else { return }
+		let request = URLRequest(url: url)
+		URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+			//			print(error)
+		}).resume()
+	}
+	
+	private func stopScriptRequest() {
+		guard let url = URL(string: "http://logify-app.com/macControlPanel/stopped.php?pc=\(encodedName)") else { return }
+		let request = URLRequest(url: url)
+		URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+			//			print(error)
+		}).resume()
+	}
+	
+	private func terminate() {
+		self.tasks.values.forEach { task in
+			if task.isRunning { task.terminate() }
+		}
+		self.runTerminateScript()
+		
+		self.timer?.invalidate()
+		self.timer = nil
+		self.tasks.removeAll()
+		
+		self.authListView.arrangedSubviews.forEach { view in
+			if let view = view as? AuthViewRow {
+				var auth = view.auth
+				auth?.status = .stopped
+				view.auth = auth
+			}
+		}
+	}
+}
+
+extension ViewController {
+	@IBAction private func refreshClicked(_ button: NSButton) {
+		guard !isRunningScript else {
+			Utils.showWarning("You must stop all scripts before refreshing list!")
+			return
+		}
+		updateAuthList()
+	}
+	
 	@IBAction func runScriptClicked(_ button: NSButton) {
 		if isRunningScript {
 			//			insertOutput("STOPPED")
@@ -274,41 +322,6 @@ class ViewController: NSViewController {
 		self.presentAsModalWindow(vc)
 		vc.onAddedAuth = { [weak self] authName in
 			self?.addAuth(authName)
-		}
-	}
-	
-	private func startScriptRequest() {
-		guard let url = URL(string: "http://logify-app.com/macControlPanel/started.php?pc=\(encodedName)") else { return }
-		let request = URLRequest(url: url)
-		URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
-			//			print(error)
-		}).resume()
-	}
-	
-	private func stopScriptRequest() {
-		guard let url = URL(string: "http://logify-app.com/macControlPanel/stopped.php?pc=\(encodedName)") else { return }
-		let request = URLRequest(url: url)
-		URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
-			//			print(error)
-		}).resume()
-	}
-	
-	private func terminate() {
-		self.tasks.values.forEach { task in
-			if task.isRunning { task.terminate() }
-		}
-		self.runTerminateScript()
-		
-		self.timer?.invalidate()
-		self.timer = nil
-		self.tasks.removeAll()
-		
-		self.authListView.arrangedSubviews.forEach { view in
-			if let view = view as? AuthViewRow {
-				var auth = view.auth
-				auth?.status = .stopped
-				view.auth = auth
-			}
 		}
 	}
 }
