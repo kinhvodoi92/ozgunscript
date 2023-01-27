@@ -197,6 +197,8 @@ class ViewController: NSViewController {
 		let auths = list.filter({ $0.hasPrefix(prefix) }).map({ $0.replacingOccurrences(of: prefix, with: "")})
 		
 		self.auths.value = auths
+		
+		self.authListView.arrangedSubviews.forEach({ $0.removeFromSuperview() })
 		auths.forEach { [weak self] name in
 			self?.addAuthToView(AuthItem(name: name, status: .stopped))
 		}
