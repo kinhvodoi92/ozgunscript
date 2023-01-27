@@ -27,5 +27,6 @@ extension RunningStatus {
 
 struct AuthItem {
 	var name: String
+	var hasAuth: Bool = true
 	var status: RunningStatus = .stopped
 }

@@ -30,7 +30,7 @@ class StartViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		saveView.attributedTitle = NSAttributedString(string: "Save", attributes: [.foregroundColor: NSColor.green])
+		saveView.attributedTitle = NSAttributedString(string: "Save", attributes: [.foregroundColor: NSColor.systemGreen])
 		
 		if let pcName = pcName {
 			nameView.stringValue = pcName

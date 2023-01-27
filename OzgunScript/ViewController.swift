@@ -60,10 +60,10 @@ class ViewController: NSViewController {
 		
 		nameView.stringValue = computerName
 		runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.systemGreen])
-		clearButton.attributedTitle = NSAttributedString(string: "Delete Current Online Datas", attributes: [.foregroundColor: NSColor.red])
+		clearButton.attributedTitle = NSAttributedString(string: "Delete Current Online Datas", attributes: [.foregroundColor: NSColor.systemRed])
 		
-		removeDSstoreFiles()
 		setup()
+		removeDSstoreFiles()
 		setAuthCount()
 		listenAuths()
 	}
@@ -181,7 +181,7 @@ class ViewController: NSViewController {
 	private func updateRunningStatus() {
 		DispatchQueue.main.async {
 			let isRunning = self.isRunningScript
-			self.runButton.attributedTitle = NSAttributedString(string: isRunning ? "Stop" : "Run Script", attributes: [.foregroundColor: isRunning ? NSColor.red : NSColor.systemGreen])
+			self.runButton.attributedTitle = NSAttributedString(string: isRunning ? "Stop" : "Run Script", attributes: [.foregroundColor: isRunning ? NSColor.systemRed : NSColor.systemGreen])
 			self.clearButton.isHidden = isRunning
 			
 			self.authListView.arrangedSubviews.forEach { view in
@@ -191,10 +191,13 @@ class ViewController: NSViewController {
 				}
 			}
 			
-			self.runningCountView.stringValue = "Running: \(self.tasks.filter({ $0.value.isRunning }).count) / \(self.auths.value?.count ?? 0)"
+			self.updateRunningCount()
 		}
 	}
 	
+	private func updateRunningCount() {
+		self.runningCountView.stringValue = "Running: \(self.tasks.filter({ $0.value.isRunning }).count) / \(self.auths.value?.count ?? 0)"
+	}
 	
 	@IBAction func runScriptClicked(_ button: NSButton) {
 		if isRunningScript {
@@ -210,7 +213,7 @@ class ViewController: NSViewController {
 			timeDelay = Int(timeDelayView.stringValue) ?? 5
 			UserDefaults.standard.set(timeDelay, forKey: delayTimeKey)
 			
-			runButton.attributedTitle = NSAttributedString(string: "Stop", attributes: [.foregroundColor: NSColor.red])
+			runButton.attributedTitle = NSAttributedString(string: "Stop", attributes: [.foregroundColor: NSColor.systemRed])
 			clearButton.isHidden = true
 			
 			if let auths = self.auths.value {
@@ -317,7 +320,7 @@ extension ViewController {
 			return
 		}
 		
-		let totalAuth = totalAuthCount(auths.map({ "\(workPath)_\($0)"}))
+		let totalAuth = totalAuthCount(auths.map({ path(with: $0) }))
 		countView.stringValue = "Total Auth: \(totalAuth)"
 	}
 	
@@ -325,7 +328,7 @@ extension ViewController {
 		var total: Int = 0
 		paths.forEach { path in
 			if let files = try? FileManager.default.contentsOfDirectory(atPath: "\(path)/auth") {
-				total += files.count - 1	// -1 of auth folder count
+				total += files.count
 			}
 		}
 		return total
@@ -339,18 +342,21 @@ extension ViewController {
 		
 		do {
 			try FileManager.default.copyItem(atPath: workPath, toPath: path(with: name))
-			print("Added auth: \(name)")
-			self.addAuthToView(AuthItem(name: name, status: self.isRunningScript ? .running : .stopped))
 			auths.append(name)
 			self.auths.value = auths
+			self.addAuthToView(AuthItem(name: name, status: self.isRunningScript ? .running : .stopped))
+			print("Added auth: \(name)")
 		} catch (let err) {
 			Utils.showError(err.localizedDescription)
 		}
 	}
 	
 	private func addAuthToView(_ item: AuthItem) {
+		var auth = item
+		auth.hasAuth = FileManager.default.fileExists(atPath: "\(path(with: item.name))/auth")
+		
 		let authView = AuthViewRow()
-		authView.auth = item
+		authView.auth = auth
 		authView.onOpenFolder = { [weak self] item in
 			if let path = self?.path(with: item.name) {
 				NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: path)
@@ -381,6 +387,7 @@ extension ViewController {
 			guard let auths = auths else { return }
 			print(auths)
 			self?.setAuthCount()
+			self?.updateRunningCount()
 		}
 	}
 }
@@ -411,7 +418,7 @@ extension ViewController {
 		
 		let folders = self.auths.value ?? []
 		folders.forEach { name in
-			let dspath = "\(workPath)_\(name)/auth/.DS_Store"
+			let dspath = "\(path(with: name))/auth/.DS_Store"
 			try? FileManager.default.removeItem(atPath: dspath)
 		}
 	}

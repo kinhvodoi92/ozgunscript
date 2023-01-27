@@ -16,6 +16,7 @@ class AuthViewRow: NSStackView {
 		didSet {
 			guard let auth = auth else { return }
 			nameView.title = auth.name
+			authView.stringValue = auth.hasAuth ? "" : "no auth"
 			statusView.title = auth.status.title
 			statusView.contentTintColor = auth.status.color
 		}
@@ -27,6 +28,16 @@ class AuthViewRow: NSStackView {
 		view.isBordered = false
 		view.alignment = .left
 		view.contentTintColor = NSColor.white
+		return view
+	}()
+	
+	private let authView: NSTextField = {
+		let view = NSTextField()
+		view.stringValue = ""
+		view.isEditable = false
+		view.isBordered = false
+		view.backgroundColor = .clear
+		view.textColor = .systemRed
 		return view
 	}()
 	
@@ -48,10 +59,12 @@ class AuthViewRow: NSStackView {
 		super.init(frame: frameRect)
 		
 		self.addArrangedSubview(nameView)
+		self.addArrangedSubview(authView)
 		self.addArrangedSubview(statusView)
 		self.addArrangedSubview(deleteView)
 		
-		self.addConstraint(nameView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.5))
+		self.addConstraint(nameView.widthAnchor.constraint(greaterThanOrEqualTo: self.widthAnchor, multiplier: 0.3))
+		self.addConstraint(authView.widthAnchor.constraint(equalToConstant: 100))
 		self.addConstraint(statusView.widthAnchor.constraint(equalToConstant: 100))
 		self.addConstraint(deleteView.widthAnchor.constraint(equalToConstant: 100))
 		
