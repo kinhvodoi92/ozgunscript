@@ -3,8 +3,7 @@
 osascript -e 'tell app "Terminal"
 activate
 do script "cd '$1'
-ts-node example
-ping google.com.vn"
+ts-node script"
 set W to the front window
 repeat
 	delay 0.1
