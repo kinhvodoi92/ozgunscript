@@ -110,7 +110,9 @@ class ViewController: NSViewController {
 			DispatchQueue.main.async {
 				self.tasks.updateValue(task, forKey: authName)
 				if let index = self.auths.value?.firstIndex(of: authName), let authView = self.authListView.arrangedSubviews[index] as? AuthViewRow {
-					authView.auth = AuthItem(name: authName, status: .running)
+					var auth = authView.auth
+					auth?.status = .running
+					authView.auth = auth
 				}
 			}
 			
