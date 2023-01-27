@@ -87,37 +87,33 @@ class ViewController: NSViewController {
 	}
 	
 	private func runScript(authName: String) {
-		//		DispatchQueue.global().async {
-		//			self.task = Process()
-		//			self.pipe = Pipe()
-		//
-		//			self.task.standardOutput = self.pipe
-		//			self.task.standardError = self.pipe
-		//			self.task.arguments = arguments
-		//			//		task.arguments = ["-c", "cd /Users/kinhroi/Desktop/EFI/OC & " + script]
-		//			//		task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-		//			self.task.launchPath = Bundle.main.path(forResource: file, ofType: nil)
-		//			self.task.launch()
-		
-		//			self.captureStandardOutputAndRouteToTextView(task: self.task)
-		let task = Process()
-		task.arguments =  ["\(self.workPath)_\(authName)"]
-		task.launchPath = Bundle.main.path(forResource: "tsnode_script", ofType: nil)
-		task.launch()
-		self.tasks.updateValue(task, forKey: authName)
-		
-		DispatchQueue.main.async {
-			if let index = self.auths.value?.firstIndex(of: authName), let authView = self.authListView.arrangedSubviews[index] as? AuthViewRow {
-				authView.auth = AuthItem(name: authName, status: .running)
+		DispatchQueue(label: authName).async {
+			let task = Process()
+			self.pipe = Pipe()
+			
+			self.task.standardOutput = self.pipe
+			self.task.standardError = self.pipe
+			//			task.arguments =  ["-c", script]
+			//			task.executableURL = URL(fileURLWithPath: "/bin/zsh")
+			task.arguments = ["\(self.workPath)_\(authName)"]
+			task.launchPath = Bundle.main.path(forResource: "tsnode_script", ofType: nil)
+			try? task.run()
+			
+			DispatchQueue.main.async {
+				self.tasks.updateValue(task, forKey: authName)
+				if let index = self.auths.value?.firstIndex(of: authName), let authView = self.authListView.arrangedSubviews[index] as? AuthViewRow {
+					authView.auth = AuthItem(name: authName, status: .running)
+				}
+			}
+			
+			self.updateRunningStatus()
+			task.terminationHandler = { [weak self] _ in
+				DispatchQueue.main.async {
+					self?.tasks.removeValue(forKey: authName)
+				}
+				self?.updateRunningStatus()
 			}
 		}
-		
-		self.updateRunningStatus()
-		task.terminationHandler = { [weak self] _ in
-			self?.tasks.removeValue(forKey: authName)
-			self?.updateRunningStatus()
-		}
-		//		}
 	}
 	
 	private func runTerminateScript() {
@@ -193,13 +189,9 @@ class ViewController: NSViewController {
 			clearButton.isHidden = true
 			
 			startScriptRequest()
-			//			DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-			DispatchQueue.global().asyncAfter(deadline: .now() + 0.5, execute: {
-				self.auths.value?.forEach({ name in
-					self.runScript(authName: name)
-				})
+			self.auths.value?.forEach({ name in
+				self.runScript(authName: name)
 			})
-			//			})
 		}
 		
 	}
@@ -296,7 +288,7 @@ extension ViewController {
 		var total: Int = 0
 		paths.forEach { path in
 			if let files = try? FileManager.default.contentsOfDirectory(atPath: "\(path)/auth") {
-				total += files.count
+				total += files.count - 1	// -1 of auth folder count
 			}
 		}
 		return total
