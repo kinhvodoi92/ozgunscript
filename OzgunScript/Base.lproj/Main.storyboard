@@ -685,7 +685,7 @@
         <scene sceneID="R2V-B0-nI4">
             <objects>
                 <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
-                    <window key="window" title="OzgunScript" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
+                    <window key="window" title="Script" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
@@ -702,10 +702,10 @@
             </objects>
             <point key="canvasLocation" x="75" y="250"/>
         </scene>
-        <!--View Controller-->
+        <!--Script-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController storyboardIdentifier="ViewController" id="XfG-lQ-9wD" customClass="ViewController" customModule="OzgunScript" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Script" storyboardIdentifier="ViewController" id="XfG-lQ-9wD" customClass="ViewController" customModule="OzgunScript" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="467" height="544"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -953,10 +953,10 @@
             </objects>
             <point key="canvasLocation" x="74.5" y="1367"/>
         </scene>
-        <!--OzgunScript-->
+        <!--Script-->
         <scene sceneID="ZX2-LJ-72i">
             <objects>
-                <viewController title="OzgunScript" id="NOs-hN-LlK" customClass="StartViewController" customModule="OzgunScript" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Script" id="NOs-hN-LlK" customClass="StartViewController" customModule="OzgunScript" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="AVx-gi-n6Z">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="222"/>
                         <autoresizingMask key="autoresizingMask"/>

@@ -56,7 +56,7 @@ class ViewController: NSViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		title = "OzgunScript"
+		title = "Script"
 		
 		nameView.stringValue = computerName
 		runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.systemGreen])
@@ -72,6 +72,10 @@ class ViewController: NSViewController {
 		didSet {
 			// Update the view, if already loaded.
 		}
+	}
+	
+	private func path(with name: String) -> String {
+		return "\(workPath)_\(name)"
 	}
 	
 	private func setup() {
@@ -250,7 +254,7 @@ class ViewController: NSViewController {
 		guard let auths = auths.value else { return }
 		for name in auths {
 			let task = Process()
-			task.arguments = [workPath, "\(workPath)_\(name)"]
+			task.arguments = [workPath, path(with: name)]
 			task.launchPath = Bundle.main.path(forResource: "copy_script", ofType: nil)
 			task.launch()
 		}
@@ -334,7 +338,7 @@ extension ViewController {
 		}
 		
 		do {
-			try FileManager.default.copyItem(atPath: workPath, toPath: "\(workPath)_\(name)")
+			try FileManager.default.copyItem(atPath: workPath, toPath: path(with: name))
 			print("Added auth: \(name)")
 			self.addAuthToView(AuthItem(name: name, status: self.isRunningScript ? .running : .stopped))
 			auths.append(name)
@@ -347,6 +351,11 @@ extension ViewController {
 	private func addAuthToView(_ item: AuthItem) {
 		let authView = AuthViewRow()
 		authView.auth = item
+		authView.onOpenFolder = { [weak self] item in
+			if let path = self?.path(with: item.name) {
+				NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: path)
+			}
+		}
 		authView.onDelete = { [weak self] item in
 			self?.deleteAuth(item.name)
 		}
@@ -380,7 +389,7 @@ extension ViewController {
 	private func deleteAuth(_ name: String) {
 		if let task = tasks[name], task.isRunning { task.terminate() }
 		do {
-			try FileManager.default.removeItem(atPath: "\(workPath)_\(name)")
+			try FileManager.default.removeItem(atPath: path(with: name))
 			self.tasks.removeValue(forKey: name)
 			
 			guard var auths = self.auths.value else { return }

@@ -8,24 +8,25 @@
 import Cocoa
 
 class AuthViewRow: NSStackView {
+	var onOpenFolder: ((AuthItem) -> Void)?
 	var onDelete: ((AuthItem) -> Void)?
 	var onStop: ((AuthItem) -> Void)?
 	var onStart: ((AuthItem) -> Void)?
 	var auth: AuthItem? {
 		didSet {
 			guard let auth = auth else { return }
-			nameView.stringValue = auth.name
+			nameView.title = auth.name
 			statusView.title = auth.status.title
 			statusView.contentTintColor = auth.status.color
 		}
 	}
 	
-	private let nameView: NSTextField = {
-		let view = NSTextField()
-		view.isEditable = false
-		view.stringValue = "Name"
-		view.drawsBackground = false
+	private let nameView: NSButton = {
+		let view = NSButton()
+		view.title = "Name"
 		view.isBordered = false
+		view.alignment = .left
+		view.contentTintColor = NSColor.white
 		return view
 	}()
 	
@@ -54,6 +55,9 @@ class AuthViewRow: NSStackView {
 		self.addConstraint(statusView.widthAnchor.constraint(equalToConstant: 100))
 		self.addConstraint(deleteView.widthAnchor.constraint(equalToConstant: 100))
 		
+		nameView.target = self
+		nameView.action = #selector(openFolder)
+		
 		statusView.target = self
 		statusView.action = #selector(toggleStatus)
 		
@@ -71,14 +75,18 @@ class AuthViewRow: NSStackView {
         // Drawing code here.
     }
 	
+	@objc func openFolder() {
+		guard let auth = self.auth else { return }
+		onOpenFolder?(auth)
+	}
+	
 	@objc func toggleStatus() {
 		guard let auth = self.auth else { return }
 		auth.status == .running ? onStop?(auth) : onStart?(auth)
 	}
 	
 	@objc func deleteItem() {
-		if let auth = self.auth {
-			onDelete?(auth)
-		}
+		guard let auth = self.auth else { return }
+		onDelete?(auth)
 	}
 }

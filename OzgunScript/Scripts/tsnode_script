@@ -3,6 +3,7 @@
 osascript -e 'tell app "Terminal"
 activate
 do script "cd '$1'
+rm -rf **/.DS_Store
 ts-node script"
 set W to the front window
 repeat
