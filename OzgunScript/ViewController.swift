@@ -370,9 +370,10 @@ extension ViewController {
 	
 	private func addAuthToView(_ item: AuthItem) {
 		let filesInAuth = try? FileManager.default.contentsOfDirectory(atPath: "\(path(with: item.name))/auth")
+		let hasAuth = filesInAuth != nil && filesInAuth!.isEmpty == false && filesInAuth!.contains(where: { $0.hasSuffix(".DS_Store") }) == false
 		
 		var auth = item
-		auth.hasAuth = filesInAuth != nil && filesInAuth!.isEmpty == false
+		auth.hasAuth = hasAuth
 		
 		let authView = AuthViewRow()
 		authView.auth = auth
