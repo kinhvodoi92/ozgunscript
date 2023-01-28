@@ -369,8 +369,10 @@ extension ViewController {
 	}
 	
 	private func addAuthToView(_ item: AuthItem) {
+		let filesInAuth = try? FileManager.default.contentsOfDirectory(atPath: "\(path(with: item.name))/auth")
+		
 		var auth = item
-		auth.hasAuth = FileManager.default.fileExists(atPath: "\(path(with: item.name))/auth")
+		auth.hasAuth = filesInAuth != nil && filesInAuth!.isEmpty == false
 		
 		let authView = AuthViewRow()
 		authView.auth = auth
@@ -402,7 +404,6 @@ extension ViewController {
 	private func listenAuths() {
 		auths.addListener { [weak self] auths in
 			guard let auths = auths else { return }
-			print(auths)
 			self?.setAuthCount()
 			self?.updateRunningCount()
 		}
