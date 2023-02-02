@@ -29,4 +29,5 @@ struct AuthItem {
 	var name: String
 	var hasAuth: Bool = true
 	var status: RunningStatus = .stopped
+	var restartCount: Int = 0
 }

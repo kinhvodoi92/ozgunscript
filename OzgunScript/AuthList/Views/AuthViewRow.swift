@@ -19,6 +19,7 @@ class AuthViewRow: NSStackView {
 			authView.stringValue = auth.hasAuth ? "" : "no auth"
 			statusView.title = auth.status.title
 			statusView.contentTintColor = auth.status.color
+			restartView.stringValue = auth.restartCount > 0 ? "\(auth.restartCount)" : ""
 		}
 	}
 	
@@ -48,6 +49,16 @@ class AuthViewRow: NSStackView {
 		return view
 	}()
 	
+	private let restartView: NSTextField = {
+		let view = NSTextField()
+		view.stringValue = ""
+		view.isEditable = false
+		view.isBordered = false
+		view.backgroundColor = .clear
+		view.textColor = .systemBlue
+		return view
+	}()
+	
 	private let deleteView: NSButton = {
 		let view = NSButton()
 		view.title = "Delete"
@@ -61,11 +72,13 @@ class AuthViewRow: NSStackView {
 		self.addArrangedSubview(nameView)
 		self.addArrangedSubview(authView)
 		self.addArrangedSubview(statusView)
+		self.addArrangedSubview(restartView)
 		self.addArrangedSubview(deleteView)
 		
 		self.addConstraint(nameView.widthAnchor.constraint(greaterThanOrEqualTo: self.widthAnchor, multiplier: 0.3))
 		self.addConstraint(authView.widthAnchor.constraint(equalToConstant: 100))
 		self.addConstraint(statusView.widthAnchor.constraint(equalToConstant: 100))
+		self.addConstraint(restartView.widthAnchor.constraint(equalToConstant: 30))
 		self.addConstraint(deleteView.widthAnchor.constraint(equalToConstant: 100))
 		
 		nameView.target = self

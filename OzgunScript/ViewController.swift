@@ -12,7 +12,8 @@ class ViewController: NSViewController {
 	@IBOutlet var nameView: NSTextField!
 	@IBOutlet var runningCountView: NSTextField!
 	@IBOutlet var countView: NSTextField!
-	@IBOutlet var timeDelayView: NSTextField!
+	@IBOutlet var delayTimeView: NSTextField!
+	@IBOutlet var restartTimeView: NSTextField!
 	@IBOutlet var runButton: NSButton!
 	@IBOutlet var clearButton: NSButton!
 	@IBOutlet var authListView: NSStackView!
@@ -29,10 +30,14 @@ class ViewController: NSViewController {
 	
 	private var auths = ValueNotifier(value: [String]())
 	private var tasks = [String: Process]()
+	private var taskTimers = [String: Timer]()
+	private var restartCount = [String: Int]()
 	private var timer: Timer?
-	private lazy var timeDelay = UserDefaults.standard.integer(forKey: delayTimeKey)
+	private lazy var delayTime = UserDefaults.standard.integer(forKey: delayTimeKey)
+	private lazy var restartTime = UserDefaults.standard.integer(forKey: restartTimeKey)
 	
 	private let delayTimeKey = "DelayTimeKey"
+	private let restartTimeKey = "RestartTimeKey"
 	
 	//	var textView: NSTextView {
 	//		return outputView.contentView.documentView as! NSTextView
@@ -87,42 +92,67 @@ class ViewController: NSViewController {
 		
 		updateAuthList()
 		
-		if timeDelay == 0 {
-			timeDelay = 5
-			UserDefaults.standard.set(timeDelay, forKey: delayTimeKey)
+		if delayTime == 0 {
+			delayTime = 5
+			UserDefaults.standard.set(delayTime, forKey: delayTimeKey)
 		}
-		timeDelayView.stringValue = "\(timeDelay)"
+		delayTimeView.stringValue = "\(delayTime)"
+		restartTimeView.stringValue = restartTime > 0 ? "\(restartTime)" : ""
 	}
 	
 	private func runScript(authName: String) {
 		DispatchQueue(label: authName).async {
-			let task = Process()
-			//			self.pipe = Pipe()
+			let script = """
+export PATH=$PATH:/usr/local/bin
+cd \(self.path(with: authName))
+   rm -rf **/.DS_Store
+   ts-node script
+ping google.com.vn
+"""
 			
-			//			self.task.standardOutput = self.pipe
-			//			self.task.standardError = self.pipe
-			//			task.arguments =  ["-c", script]
-			//			task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-			task.arguments = ["\(self.workPath)_\(authName)"]
-			task.launchPath = Bundle.main.path(forResource: "tsnode_script", ofType: nil)
+			let task = Process()
+						self.pipe = Pipe()
+			
+						self.task.standardOutput = self.pipe
+						self.task.standardError = self.pipe
+						task.arguments =  ["-c", script]
+						task.executableURL = URL(fileURLWithPath: "/bin/zsh")
+//			task.arguments = ["\(self.workPath)_\(authName)"]
+//			task.launchPath = Bundle.main.path(forResource: "tsnode_script", ofType: nil)
 			task.launch()
+			
+//			self.captureStandardOutputAndRouteToTextView(task: task)
 			
 			DispatchQueue.main.async {
 				self.tasks.updateValue(task, forKey: authName)
-				if let index = self.auths.value?.firstIndex(of: authName), let authView = self.authListView.arrangedSubviews[index] as? AuthViewRow {
-					var auth = authView.auth
-					auth?.status = .running
-					authView.auth = auth
+				self.setRunningTask(authName)
+				
+				self.taskTimers[authName]?.invalidate()
+				let timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.restartTime), repeats: true) { _ in
+					print("Restart Task")
+					if let task = self.tasks[authName], task.isRunning {
+						let restartCount = self.restartCount[authName] ?? 0
+						self.restartCount[authName] = restartCount + 1
+						
+						task.terminate()
+						self.runScript(authName: authName)
+					}
 				}
+				self.taskTimers[authName] = timer
 			}
 			
 			self.updateRunningStatus()
-			task.terminationHandler = { [weak self] _ in
-				DispatchQueue.main.async {
-					self?.tasks.removeValue(forKey: authName)
-				}
+			task.terminationHandler = { [weak self] task in
 				self?.updateRunningStatus()
 			}
+		}
+	}
+	
+	private func setRunningTask(_ authName: String) {
+		if let index = self.auths.value?.firstIndex(of: authName), let authView = self.authListView.arrangedSubviews[index] as? AuthViewRow {
+			var auth = authView.auth
+			auth?.status = .running
+			authView.auth = auth
 		}
 	}
 	
@@ -132,43 +162,44 @@ class ViewController: NSViewController {
 		task.launch()
 	}
 	
-	//	func captureStandardOutputAndRouteToTextView(task: Process) {
-	//		pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
-	//
-	//		task.terminationHandler = { [weak self] _ in
-	//			DispatchQueue.main.async {
-	//				self?.runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.systemGreen])
-	//				self?.clearButton.isHidden = false
-	//			}
-	//		}
-	//
-	//		NotificationCenter.default.addObserver(forName: NSNotification.Name.NSFileHandleDataAvailable, object: pipe.fileHandleForReading , queue: nil) {
-	//			[weak self] notification in
-	//			self?.updateOutput()
-	//		}
-	//	}
-	//
-	//	private func updateOutput() {
-	//		let output = self.pipe.fileHandleForReading.availableData
-	//		let outputString = String(data: output, encoding: String.Encoding.utf8) ?? ""
-	//
-	//		self.insertOutput(outputString)
-	//
-	//		self.pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
-	//	}
-	//
-	//	private func insertOutput(_ string: String) {
-	//		if string.isEmpty { return }
-	//
-	//		DispatchQueue.main.async(execute: {
-	//			let previousOutput = self.textView.string
-	//			let nextOutput = previousOutput + "\n" + string
-	//			self.textView.string = nextOutput
-	//
-	//			let range = NSRange(location:nextOutput.count,length:0)
-	//			self.textView.scrollRangeToVisible(range)
-	//		})
-	//	}
+		func captureStandardOutputAndRouteToTextView(task: Process) {
+			pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
+	
+			task.terminationHandler = { [weak self] _ in
+				DispatchQueue.main.async {
+					self?.runButton.attributedTitle = NSAttributedString(string: "Run Script", attributes: [.foregroundColor: NSColor.systemGreen])
+					self?.clearButton.isHidden = false
+				}
+			}
+	
+			NotificationCenter.default.addObserver(forName: NSNotification.Name.NSFileHandleDataAvailable, object: pipe.fileHandleForReading , queue: nil) {
+				[weak self] notification in
+				self?.updateOutput()
+			}
+		}
+	
+		private func updateOutput() {
+			let output = self.pipe.fileHandleForReading.availableData
+			let outputString = String(data: output, encoding: String.Encoding.utf8) ?? ""
+	
+			self.insertOutput(outputString)
+	
+			self.pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
+		}
+	
+		private func insertOutput(_ string: String) {
+			if string.isEmpty { return }
+//			print(string)
+	
+//			DispatchQueue.main.async(execute: {
+//				let previousOutput = self.textView.string
+//				let nextOutput = previousOutput + "\n" + string
+//				self.textView.string = nextOutput
+//
+//				let range = NSRange(location:nextOutput.count,length:0)
+//				self.textView.scrollRangeToVisible(range)
+//			})
+		}
 	
 	private func updateRunningStatus() {
 		DispatchQueue.main.async {
@@ -179,6 +210,7 @@ class ViewController: NSViewController {
 			self.authListView.arrangedSubviews.forEach { view in
 				if let view = view as? AuthViewRow, var auth = view.auth {
 					auth.status = self.tasks[auth.name]?.isRunning == true ? .running : .stopped
+					auth.restartCount = self.restartCount[auth.name] ?? 0
 					view.auth = auth
 				}
 			}
@@ -226,11 +258,15 @@ class ViewController: NSViewController {
 		self.tasks.values.forEach { task in
 			if task.isRunning { task.terminate() }
 		}
-		self.runTerminateScript()
+		self.tasks.removeAll()
+//		self.runTerminateScript()
 		
 		self.timer?.invalidate()
 		self.timer = nil
 		self.tasks.removeAll()
+		self.taskTimers.values.forEach({ $0.invalidate() })
+		self.taskTimers.removeAll()
+		self.restartCount.removeAll()
 		
 		self.authListView.arrangedSubviews.forEach { view in
 			if let view = view as? AuthViewRow {
@@ -262,8 +298,12 @@ extension ViewController {
 		} else {
 			startScriptRequest()
 			
-			timeDelay = Int(timeDelayView.stringValue) ?? 5
-			UserDefaults.standard.set(timeDelay, forKey: delayTimeKey)
+			delayTime = Int(delayTimeView.stringValue) ?? 5
+			restartTime = Int(restartTimeView.stringValue) ?? 0
+			UserDefaults.standard.set(delayTime, forKey: delayTimeKey)
+			if restartTime > 0 {
+				UserDefaults.standard.set(restartTime, forKey: restartTimeKey)
+			}
 			
 			runButton.attributedTitle = NSAttributedString(string: "Stop", attributes: [.foregroundColor: NSColor.systemRed])
 			clearButton.isHidden = true
@@ -271,7 +311,7 @@ extension ViewController {
 			if let auths = self.auths.value {
 				var index = 0
 				timer?.invalidate()
-				timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.timeDelay), repeats: true, block: { [weak self] _ in
+				timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.delayTime), repeats: true, block: { [weak self] _ in
 					if index >= auths.count {
 						self?.timer?.invalidate()
 						self?.timer = nil
@@ -404,7 +444,7 @@ extension ViewController {
 	
 	private func listenAuths() {
 		auths.addListener { [weak self] auths in
-			guard let auths = auths else { return }
+//			guard let auths = auths else { return }
 			self?.setAuthCount()
 			self?.updateRunningCount()
 		}
