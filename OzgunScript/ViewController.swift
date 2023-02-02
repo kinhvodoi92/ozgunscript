@@ -107,7 +107,6 @@ export PATH=$PATH:/usr/local/bin
 cd \(self.path(with: authName))
    rm -rf **/.DS_Store
    ts-node script
-ping google.com.vn
 """
 			
 			let task = Process()
@@ -143,6 +142,8 @@ ping google.com.vn
 			
 			self.updateRunningStatus()
 			task.terminationHandler = { [weak self] task in
+				self?.taskTimers[authName]?.invalidate()
+				self?.taskTimers[authName] = nil
 				self?.updateRunningStatus()
 			}
 		}
