@@ -806,7 +806,7 @@
                                         </customSpacing>
                                     </stackView>
                                     <stackView distribution="fillProportionally" orientation="horizontal" alignment="bottom" spacing="24" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nFW-oF-6Ne">
-                                        <rect key="frame" x="80" y="372" width="302" height="60"/>
+                                        <rect key="frame" x="78" y="372" width="307" height="60"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="trailing" spacing="12" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hOo-Wm-fEk">
                                                 <rect key="frame" x="0.0" y="0.0" width="200" height="60"/>
@@ -825,7 +825,6 @@
                                                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="T8o-rZ-uti">
                                                                 <rect key="frame" x="96" y="2" width="92" height="21"/>
                                                                 <textFieldCell key="cell" controlSize="large" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Delay Time" drawsBackground="YES" id="T3z-Ai-0hO">
-                                                                    <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="nKb-kH-xCT"/>
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -858,7 +857,6 @@
                                                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4cd-zQ-6uz">
                                                                 <rect key="frame" x="106" y="2" width="92" height="21"/>
                                                                 <textFieldCell key="cell" controlSize="large" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Restart Time" drawsBackground="YES" id="rmI-2q-s0z">
-                                                                    <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="jzN-7f-DV5"/>
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -891,7 +889,7 @@
                                                 </customSpacing>
                                             </stackView>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iwt-yH-kLg">
-                                                <rect key="frame" x="221" y="-4" width="84" height="47"/>
+                                                <rect key="frame" x="221" y="-4" width="89" height="47"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="dNm-oR-XSw"/>
                                                 </constraints>
@@ -920,7 +918,7 @@
                                         <rect key="frame" x="0.0" y="264" width="462" height="84"/>
                                         <subviews>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7Mp-9k-XcI">
-                                                <rect key="frame" x="-3" y="18" width="235" height="47"/>
+                                                <rect key="frame" x="-3" y="18" width="234" height="47"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="iNm-8w-oC6"/>
                                                 </constraints>
@@ -933,7 +931,7 @@
                                                 </connections>
                                             </button>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5EN-tH-hm5">
-                                                <rect key="frame" x="250" y="18" width="215" height="47"/>
+                                                <rect key="frame" x="249" y="18" width="216" height="47"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="Yzm-xQ-FBs"/>
                                                 </constraints>
@@ -966,11 +964,11 @@
                                     <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w8r-jU-Guy">
                                         <rect key="frame" x="0.0" y="0.0" width="462" height="200"/>
                                         <clipView key="contentView" id="9ge-0i-B5i">
-                                            <rect key="frame" x="1" y="1" width="445" height="198"/>
+                                            <rect key="frame" x="1" y="1" width="460" height="198"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <stackView distribution="fillProportionally" orientation="vertical" alignment="centerX" spacing="12" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalClippingResistancePriority="250" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aPD-7J-p4f">
-                                                    <rect key="frame" x="0.0" y="178" width="445" height="20"/>
+                                                    <rect key="frame" x="0.0" y="178" width="460" height="20"/>
                                                     <edgeInsets key="edgeInsets" left="10" right="10" top="10" bottom="10"/>
                                                 </stackView>
                                             </subviews>
@@ -988,7 +986,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                         <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="0.5" horizontal="NO" id="oe5-8h-2az">
-                                            <rect key="frame" x="446" y="1" width="15" height="198"/>
+                                            <rect key="frame" x="445" y="1" width="16" height="198"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
@@ -1064,7 +1062,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2z1-wz-k56">
-                                        <rect key="frame" x="121" y="68" width="160" height="47"/>
+                                        <rect key="frame" x="118" y="68" width="166" height="47"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="EbY-02-1T1"/>
                                         </constraints>
@@ -1077,7 +1075,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xOi-Ds-hN2">
-                                        <rect key="frame" x="-3" y="130" width="166" height="47"/>
+                                        <rect key="frame" x="-3" y="130" width="172" height="47"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="FP4-4l-jp9"/>
                                         </constraints>
@@ -1090,7 +1088,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pd7-pF-kGQ">
-                                        <rect key="frame" x="176" y="-4" width="50" height="47"/>
+                                        <rect key="frame" x="173" y="-4" width="56" height="47"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="t5b-Up-Ary"/>
                                         </constraints>

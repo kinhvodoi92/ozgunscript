@@ -126,18 +126,20 @@ cd \(self.path(with: authName))
 				self.tasks.updateValue(task, forKey: authName)
 				self.setRunningTask(authName)
 				
-				self.taskTimers[authName]?.invalidate()
-				let timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.restartTime), repeats: true) { _ in
-					print("Restart Task")
-					if let task = self.tasks[authName], task.isRunning {
-						let restartCount = self.restartCount[authName] ?? 0
-						self.restartCount[authName] = restartCount + 1
-						
-						task.terminate()
-						self.runScript(authName: authName)
+				if self.restartTime > 0 {
+					self.taskTimers[authName]?.invalidate()
+					let timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(self.restartTime), repeats: true) { _ in
+						print("Restart Task")
+						if let task = self.tasks[authName], task.isRunning {
+							let restartCount = self.restartCount[authName] ?? 0
+							self.restartCount[authName] = restartCount + 1
+							
+							task.terminate()
+							self.runScript(authName: authName)
+						}
 					}
+					self.taskTimers[authName] = timer
 				}
-				self.taskTimers[authName] = timer
 			}
 			
 			self.updateRunningStatus()
@@ -302,9 +304,7 @@ extension ViewController {
 			delayTime = Int(delayTimeView.stringValue) ?? 5
 			restartTime = Int(restartTimeView.stringValue) ?? 0
 			UserDefaults.standard.set(delayTime, forKey: delayTimeKey)
-			if restartTime > 0 {
-				UserDefaults.standard.set(restartTime, forKey: restartTimeKey)
-			}
+			UserDefaults.standard.set(restartTime, forKey: restartTimeKey)
 			
 			runButton.attributedTitle = NSAttributedString(string: "Stop", attributes: [.foregroundColor: NSColor.systemRed])
 			clearButton.isHidden = true
