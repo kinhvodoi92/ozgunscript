@@ -100,7 +100,7 @@ class ViewController: NSViewController {
 		restartTimeView.stringValue = restartTime > 0 ? "\(restartTime)" : ""
 	}
 	
-	private func runScript(authName: String) {
+	private func runScript(authName: String, isNew: Bool = false) {
 		DispatchQueue(label: authName).async {
 			let script = """
 export PATH=$PATH:/usr/local/bin
@@ -114,10 +114,13 @@ cd \(self.path(with: authName))
 			
 						self.task.standardOutput = self.pipe
 						self.task.standardError = self.pipe
-						task.arguments =  ["-c", script]
-						task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-//			task.arguments = ["\(self.workPath)_\(authName)"]
-//			task.launchPath = Bundle.main.path(forResource: "tsnode_script", ofType: nil)
+			if isNew {
+				task.arguments = ["\(self.workPath)_\(authName)"]
+				task.launchPath = Bundle.main.path(forResource: "tsnode_script", ofType: nil)
+			} else {
+				task.arguments =  ["-c", script]
+				task.executableURL = URL(fileURLWithPath: "/bin/zsh")
+			}
 			task.launch()
 			
 //			self.captureStandardOutputAndRouteToTextView(task: task)
@@ -366,7 +369,7 @@ extension ViewController {
 		//			self.view.window?.contentViewController = vc
 		self.presentAsModalWindow(vc)
 		vc.onAddedAuth = { [weak self] authName in
-			self?.addAuth(authName)
+			self?.addAuth(authName, isNew: true)
 		}
 	}
 }
@@ -392,7 +395,7 @@ extension ViewController {
 		return total
 	}
 	
-	private func addAuth(_ name: String) {
+	private func addAuth(_ name: String, isNew: Bool = false) {
 		guard var auths = self.auths.value, !auths.contains(name) else {
 			Utils.showWarning("Cannot add existed Auth!")
 			return
@@ -402,14 +405,14 @@ extension ViewController {
 			try FileManager.default.copyItem(atPath: workPath, toPath: path(with: name))
 			auths.append(name)
 			self.auths.value = auths
-			self.addAuthToView(AuthItem(name: name, status: self.isRunningScript ? .running : .stopped))
+			self.addAuthToView(AuthItem(name: name, status: self.isRunningScript ? .running : .stopped), isNew: isNew)
 			print("Added auth: \(name)")
 		} catch (let err) {
 			Utils.showError(err.localizedDescription)
 		}
 	}
 	
-	private func addAuthToView(_ item: AuthItem) {
+	private func addAuthToView(_ item: AuthItem, isNew: Bool = false) {
 		let filesInAuth = try? FileManager.default.contentsOfDirectory(atPath: "\(path(with: item.name))/auth")
 		let hasAuth = filesInAuth != nil && filesInAuth!.isEmpty == false && filesInAuth!.contains(where: { $0.hasSuffix(".DS_Store") }) == false
 		
@@ -439,7 +442,7 @@ extension ViewController {
 		self.authListView.addArrangedSubview(authView)
 		
 		if item.status == .running {
-			runScript(authName: item.name)
+			runScript(authName: item.name, isNew: isNew)
 		}
 	}
 	
