@@ -3,7 +3,6 @@
 osascript -e '
 tell application "System Events"
 	tell application "Terminal"
-		activate front window
 		do script "killall -9 Terminal"
 	end tell
 end tell'

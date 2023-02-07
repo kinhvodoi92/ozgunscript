@@ -265,7 +265,6 @@ cd \(self.path(with: authName))
 			if task.isRunning { task.terminate() }
 		}
 		self.tasks.removeAll()
-//		self.runTerminateScript()
 		
 		self.timer?.invalidate()
 		self.timer = nil
@@ -273,6 +272,7 @@ cd \(self.path(with: authName))
 		self.taskTimers.values.forEach({ $0.invalidate() })
 		self.taskTimers.removeAll()
 		self.restartCount.removeAll()
+		self.runTerminateScript()
 		
 		self.authListView.arrangedSubviews.forEach { view in
 			if let view = view as? AuthViewRow {
@@ -403,7 +403,7 @@ extension ViewController {
 		
 		do {
 			try FileManager.default.copyItem(atPath: workPath, toPath: path(with: name))
-			auths.append(name)
+			isNew ? auths.insert(name, at: 0) : auths.append(name)
 			self.auths.value = auths
 			self.addAuthToView(AuthItem(name: name, status: self.isRunningScript ? .running : .stopped), isNew: isNew)
 			print("Added auth: \(name)")
@@ -439,7 +439,12 @@ extension ViewController {
 		authView.onStart = { [weak self] item in
 			self?.runScript(authName: item.name)
 		}
-		self.authListView.addArrangedSubview(authView)
+		
+		if isNew {
+			self.authListView.insertArrangedSubview(authView, at: 0)
+		} else {
+			self.authListView.addArrangedSubview(authView)
+		}
 		
 		if item.status == .running {
 			runScript(authName: item.name, isNew: isNew)
